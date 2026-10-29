@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TradeIndexRouteImport } from './routes/trade.index'
+import { Route as TradeTokenRouteImport } from './routes/trade.$token'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TradeIndexRoute = TradeIndexRouteImport.update({
+  id: '/trade/',
+  path: '/trade/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TradeTokenRoute = TradeTokenRouteImport.update({
+  id: '/trade/$token',
+  path: '/trade/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/trade/$token': typeof TradeTokenRoute
+  '/trade/': typeof TradeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/trade/$token': typeof TradeTokenRoute
+  '/trade': typeof TradeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/trade/$token': typeof TradeTokenRoute
+  '/trade/': typeof TradeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/trade/$token' | '/trade/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/trade/$token' | '/trade'
+  id: '__root__' | '/' | '/trade/$token' | '/trade/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TradeTokenRoute: typeof TradeTokenRoute
+  TradeIndexRoute: typeof TradeIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trade/': {
+      id: '/trade/'
+      path: '/trade'
+      fullPath: '/trade/'
+      preLoaderRoute: typeof TradeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trade/$token': {
+      id: '/trade/$token'
+      path: '/trade/$token'
+      fullPath: '/trade/$token'
+      preLoaderRoute: typeof TradeTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TradeTokenRoute: TradeTokenRoute,
+  TradeIndexRoute: TradeIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
