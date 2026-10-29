@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, Zap } from "lucide-react";
 import * as svc from "@/services";
-import type { Side, Timeframe } from "@/services/types";
+import type { Side } from "@/services/types";
 import { useTradeStore } from "@/store/trade-store";
-import { oracleQuery, poolQuery, positionsQuery, previewQuery, walletQuery } from "@/lib/queries";
+import { oracleQuery, poolQuery, previewQuery, walletQuery } from "@/lib/queries";
 import { fmtBnb, fmtPct, fmtPrice, fmtSigned } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,6 @@ import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { OneClickModal } from "./one-click-modal";
-import { PositionsTable } from "./positions-table";
 
 const LEVERAGES: Array<2 | 5 | 10> = [2, 5, 10];
 const LIQ_HINTS: Record<number, string> = {
@@ -39,7 +38,6 @@ export function OrderPanel({ token }: { token: string | null }) {
   const { data: preview } = useQuery(
     previewQuery({ token, isLong: store.side === "long", leverage: store.leverage, amountBnb: amount })
   );
-  const { data: positions } = useQuery(positionsQuery(wallet?.connected ? wallet.address : null));
 
   const open = useMutation({
     mutationFn: () =>
