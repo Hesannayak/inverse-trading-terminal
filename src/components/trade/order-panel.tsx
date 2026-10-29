@@ -197,7 +197,7 @@ export function OrderPanel({ token }: { token: string | null }) {
             min={-50}
             max={50}
             step={1}
-            onValueChange={([v]) => setSimMove(v)}
+            onValueChange={(vals) => setSimMove(vals[0] ?? 0)}
             className="mt-2"
           />
           <div className="num mt-1 flex justify-between text-[10px] text-muted-foreground">

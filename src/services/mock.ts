@@ -121,8 +121,8 @@ function specForAddress(address: string): TokenSpec {
   if (known) return known;
   const h = hash(address.toLowerCase());
   const r = mulberry(h);
-  const name = `${SYNONYMS_A[h % SYNONYMS_A.length]}${SYNONYMS_B[(h >> 4) % SYNONYMS_B.length]}`;
-  const symbol = (name.slice(0, 2) + SYNONYMS_B[(h >> 8) % SYNONYMS_B.length].slice(0, 2)).toUpperCase();
+  const name = `${SYNONYMS_A[h % SYNONYMS_A.length]!}${SYNONYMS_B[(h >> 4) % SYNONYMS_B.length]!}`;
+  const symbol = (name.slice(0, 2) + SYNONYMS_B[(h >> 8) % SYNONYMS_B.length]!.slice(0, 2)).toUpperCase();
   const liquidity = 15 + r() * 3000;
   return {
     address,
@@ -198,14 +198,14 @@ export async function getCandles(token: string, tf: Timeframe): Promise<Candle[]
   // random walk backwards from the live price
   const closes: number[] = [priceBnb];
   for (let i = 1; i < count; i++) {
-    const prev = closes[closes.length - 1] * (1 + (r() - 0.5) * 0.012);
+    const prev = closes[closes.length - 1]! * (1 + (r() - 0.5) * 0.012);
     closes.push(Math.max(prev, priceBnb * 0.4));
   }
   closes.reverse();
   const out: Candle[] = [];
   for (let i = 0; i < count; i++) {
-    const c = closes[i];
-    const o = i === 0 ? c * (1 - (r() - 0.5) * 0.01) : closes[i - 1];
+    const c = closes[i]!;
+    const o = i === 0 ? c * (1 - (r() - 0.5) * 0.01) : closes[i - 1]!;
     const hi = Math.max(o, c) * (1 + r() * 0.006);
     const lo = Math.min(o, c) * (1 - r() * 0.006);
     out.push({ time: now - (count - 1 - i) * step, open: o, high: hi, low: lo, close: c });
@@ -549,7 +549,7 @@ export async function getPool(): Promise<PoolStats> {
           id: `ev-${i}`,
           kind,
           amountBnb: kind === "borrow_fee" ? rnd(0.02, 0.4) : rnd(0.5, 22),
-          shares: kind === "deposit" || kind === "withdraw" ? rnd(0.5, 20) : undefined,
+          ...(kind === "deposit" || kind === "withdraw" ? { shares: rnd(0.5, 20) } : {}),
           address: fakeAddress(hash(`pooler${i}`)),
           ts: Date.now() - (i + 1) * rnd(1800_000, 14_400_000),
         };

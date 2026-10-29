@@ -50,7 +50,7 @@ export function PriceChart({ candles, timeframe, onTimeframe, up, className, com
       chartRef.current = chart;
       seriesRef.current = series as unknown as { setData: (d: unknown) => void };
       if (candles?.length) {
-        series.setData(candles);
+        series.setData(candles.map((c) => ({ time: c.time as never, value: c.close })));
         chart.timeScale().fitContent();
       }
       const ro = new ResizeObserver(() => {
@@ -75,7 +75,7 @@ export function PriceChart({ candles, timeframe, onTimeframe, up, className, com
       | { timeScale: () => { fitContent: () => void } }
       | null;
     if (!series || !candles?.length) return;
-    series.setData(candles);
+    series.setData(candles.map((c) => ({ time: c.time as never, value: c.close })));
     chart?.timeScale().fitContent();
   }, [candles]);
 
