@@ -275,9 +275,9 @@ let posSeq = 1;
 function seedDemoBook() {
   if (DEMO_POSITIONS.length || DEMO_HISTORY.length) return;
   const seeds: Array<[string, Side, 2 | 5 | 10, number, number]> = [
-    [TOKENS[0].address, "long", 5, 1.2, -2],
-    [TOKENS[2].address, "short", 2, 0.8, -6],
-    [TOKENS[3].address, "long", 10, 0.35, -1],
+    [TOKENS[0]!.address, "long", 5, 1.2, -2],
+    [TOKENS[2]!.address, "short", 2, 0.8, -6],
+    [TOKENS[3]!.address, "long", 10, 0.35, -1],
   ];
   for (const [addr, side, lev, amount, minutesAgo] of seeds) {
     const spec = specForAddress(addr);
@@ -304,14 +304,14 @@ function seedDemoBook() {
     });
   }
   const histSeeds: Array<[string, Side, 2 | 5 | 10, number, number, number]> = [
-    [TOKENS[1].address, "long", 2, 0.5, 4.2, -26],
-    [TOKENS[0].address, "short", 5, 0.3, -12.8, -74],
-    [TOKENS[2].address, "long", 10, 0.9, 61.3, -120],
-    [TOKENS[4].address, "long", 5, 0.4, -7.1, -190],
-    [TOKENS[3].address, "short", 2, 1.1, 2.6, -300],
-    [TOKENS[0].address, "long", 2, 0.7, 9.4, -420],
-    [TOKENS[5].address, "short", 10, 0.25, -31.5, -520],
-    [TOKENS[1].address, "long", 5, 0.6, 15.2, -700],
+    [TOKENS[1]!.address, "long", 2, 0.5, 4.2, -26],
+    [TOKENS[0]!.address, "short", 5, 0.3, -12.8, -74],
+    [TOKENS[2]!.address, "long", 10, 0.9, 61.3, -120],
+    [TOKENS[4]!.address, "long", 5, 0.4, -7.1, -190],
+    [TOKENS[3]!.address, "short", 2, 1.1, 2.6, -300],
+    [TOKENS[0]!.address, "long", 2, 0.7, 9.4, -420],
+    [TOKENS[5]!.address, "short", 10, 0.25, -31.5, -520],
+    [TOKENS[1]!.address, "long", 5, 0.6, 15.2, -700],
   ];
   histSeeds.forEach(([addr, side, lev, amount, pnlPct, minutesAgo], i) => {
     const spec = specForAddress(addr);
@@ -393,7 +393,7 @@ export async function closePosition(id: string): Promise<{ pnlBnb: number }> {
   seedDemoBook();
   const idx = DEMO_POSITIONS.findIndex((p) => p.id === id);
   if (idx === -1) throw new Error("Position not found");
-  const p = DEMO_POSITIONS[idx];
+  const p = DEMO_POSITIONS[idx]!;
   const ts = stateFor(p.token);
   const mark = ts.priceUsd / bnbPriceUsdState.v;
   const pnl =
@@ -441,9 +441,9 @@ function pushTape(e: Omit<TapeEntry, "id" | "ts">) {
 }
 
 function randomTapeEntry(): TapeEntry {
-  const spec = TOKENS[Math.floor(Math.random() * TOKENS.length)];
+  const spec = TOKENS[Math.floor(Math.random() * TOKENS.length)]!;
   const side: Side = Math.random() < 0.5 ? "long" : "short";
-  const leverage = [2, 5, 10, 10, 5, 2, 10][Math.floor(Math.random() * 7)];
+  const leverage = [2, 5, 10, 10, 5, 2, 10][Math.floor(Math.random() * 7)]!;
   const size = Math.pow(10, rnd(-0.7, 1.2));
   const liquidated = Math.random() < 0.07;
   const closed = !liquidated && Math.random() < 0.4;
@@ -483,9 +483,9 @@ const LEADERBOARD: TopTrade[] = [];
 function seedLeaderboard() {
   if (LEADERBOARD.length) return;
   const rows = Array.from({ length: 10 }, (_, i) => {
-    const spec = TOKENS[(hash(`lb${i}`) + i) % TOKENS.length];
+    const spec = TOKENS[(hash(`lb${i}`) + i) % TOKENS.length]!;
     const side: Side = i % 3 === 0 ? "short" : "long";
-    const leverage = [10, 10, 5, 10, 2, 5, 10, 5, 2, 10][i];
+    const leverage = [10, 10, 5, 10, 2, 5, 10, 5, 2, 10][i]!;
     const pnlBnb = rnd(8, 96) * (1 - i * 0.08);
     return {
       rank: i + 1,
@@ -544,7 +544,7 @@ export async function getPool(): Promise<PoolStats> {
     ? [...poolState.events]
     : Array.from({ length: 8 }, (_, i) => {
         const kinds: PoolEvent["kind"][] = ["deposit", "borrow_fee", "withdraw", "deposit", "liquidation", "borrow_fee", "deposit", "withdraw"];
-        const kind = kinds[i];
+        const kind = kinds[i] ?? "deposit";
         return {
           id: `ev-${i}`,
           kind,
