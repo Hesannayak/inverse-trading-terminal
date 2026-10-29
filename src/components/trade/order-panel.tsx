@@ -271,13 +271,6 @@ export function OrderPanel({ token }: { token: string | null }) {
         />
       </div>
 
-      <div className="border-t border-border">
-        <div className="px-2 pt-2 text-[11px] font-medium text-muted-foreground">
-          Positions on this token
-        </div>
-        <PositionsTable positions={positions?.filter((p) => p.token === token)} />
-      </div>
-
       <OneClickModal open={oneClickOpen} onOpenChange={setOneClickOpen} />
     </div>
   );
