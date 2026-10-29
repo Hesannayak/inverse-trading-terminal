@@ -1,22 +1,14 @@
-// ============= Full file contents =============
+// Types for the inverse trading terminal. All data flows through
+// src/services — components never touch anything blockchain-related.
 
-0:
-Types for the inverse trading terminal. All data flows through
-src/services — components never touch anything blockchain-related.
-
-1:
 export type Side = "long" | "short";
 
-2:
 export type Leverage = 2 | 5 | 10;
 
-3:
 export type OracleRoute = "V2" | "V3";
 
-4:
 export type Timeframe = "1H" | "4H" | "1D" | "1W";
 
-5:
 export interface Market {
   /** BEP-20 contract address (also the stable token id used in routes) */
   token: string;
@@ -32,7 +24,6 @@ export interface Market {
   oracleRoute: OracleRoute;
 }
 
-6:
 export interface Candle {
   /** unix seconds */
   time: number;
@@ -42,10 +33,8 @@ export interface Candle {
   close: number;
 }
 
-7:
 export type OracleState = "ok" | "warming" | "unsupported" | "halted";
 
-8:
 export interface OracleStatus {
   state: OracleState;
   /** seconds until the oracle is ready (warming state only) */
@@ -53,7 +42,6 @@ export interface OracleStatus {
   message?: string;
 }
 
-9:
 export interface OpenPreview {
   token: string;
   isLong: boolean;
@@ -70,7 +58,6 @@ export interface OpenPreview {
   minHoldSeconds: number;
 }
 
-10:
 export interface Position {
   id: string;
   token: string;
@@ -88,7 +75,6 @@ export interface Position {
   openedAt: number;
 }
 
-11:
 export interface HistoryFees {
   openFeeBnb: number;
   closeFeeBnb: number;
@@ -96,7 +82,6 @@ export interface HistoryFees {
   totalBnb: number;
 }
 
-12:
 export interface HistoryEntry {
   id: string;
   token: string;
@@ -112,7 +97,6 @@ export interface HistoryEntry {
   fees: HistoryFees;
 }
 
-13:
 export interface TapeEntry {
   id: string;
   symbol: string;
@@ -125,7 +109,6 @@ export interface TapeEntry {
   ts: number;
 }
 
-14:
 export interface TopTrade {
   rank: number;
   token: string;
@@ -137,7 +120,6 @@ export interface TopTrade {
   address: string;
 }
 
-15:
 export interface PoolEvent {
   id: string;
   kind: "deposit" | "withdraw" | "borrow_fee" | "liquidation";
@@ -147,7 +129,6 @@ export interface PoolEvent {
   ts: number;
 }
 
-16:
 export interface PoolSeriesPoint {
   ts: number;
   tvlBnb: number;
@@ -156,7 +137,6 @@ export interface PoolSeriesPoint {
   sharePrice: number;
 }
 
-17:
 export interface PoolStats {
   tvlBnb: number;
   apy7dPct: number;
@@ -173,7 +153,6 @@ export interface PoolStats {
   events: PoolEvent[];
 }
 
-18:
 export interface OneClickSession {
   id: string;
   budgetBnb: number;
@@ -183,14 +162,12 @@ export interface OneClickSession {
   expiresAt: number;
 }
 
-19:
 export interface Wallet {
   address: string | null;
   bnbBalance: number;
   connected: boolean;
 }
 
-20:
 export interface OpenPositionParams {
   token: string;
   isLong: boolean;
@@ -200,7 +177,6 @@ export interface OpenPositionParams {
   slBnb?: number | null;
 }
 
-21:
 export interface OneClickSessionParams {
   budgetBnb: number;
   maxPerTradeBnb: number;
